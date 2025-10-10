@@ -1,7 +1,10 @@
 import React from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
+import { getCart } from '../../data/cart';
 
 function NavBar() {
+  const cartCount = getCart().length;
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
@@ -18,11 +21,14 @@ function NavBar() {
             <Nav.Link href="/contact">Contacto</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="/user">
+            <Nav.Link href="/auth">
               <span className="material-icons">person</span>
             </Nav.Link>
             <Nav.Link href="/cart">
               <span className="material-icons">shopping_cart</span>
+              {cartCount > 0 && (
+                <span className="badge bg-danger ms-1">{cartCount}</span>
+              )}
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
