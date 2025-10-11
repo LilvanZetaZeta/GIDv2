@@ -16,12 +16,10 @@ function ProductDetail() {
   const imagePath = `/img/productos/${product.category}/${product.image}`;
 
   const handleAddToCart = () => {
-    if (quantity > product.stock) {
-      alert(`Solo hay ${product.stock} unidades disponibles`);
-      return;
+    const success = addToCart({ ...product, quantity });
+    if (success) {
+      alert(`${quantity} unidad(es) de ${product.name} agregadas al carrito`);
     }
-    addToCart({ ...product, quantity });
-    alert(`${quantity} unidad(es) de ${product.name} agregadas al carrito`);
   };
 
   return (
@@ -29,7 +27,11 @@ function ProductDetail() {
       <Row>
         <Col md={6}>
           <div className="product-detail-image-wrapper">
-            <img src={imagePath} alt={product.name} className="product-detail-image img-fluid rounded shadow" />
+            <img
+              src={imagePath}
+              alt={product.name}
+              className="product-detail-image img-fluid rounded shadow"
+            />
           </div>
 
           <div className="mt-4">
@@ -65,14 +67,15 @@ function ProductDetail() {
           <h3 className="product-detail-price">${product.price.toLocaleString('es-CL')}</h3>
           <p className="product-detail-stock">Stock disponible: {product.stock}</p>
 
-          <Form.Control
-            type="number"
-            min="1"
-            max={product.stock}
+          <Form.Select
             value={quantity}
             onChange={(e) => setQuantity(parseInt(e.target.value))}
             className="mb-2"
-          />
+          >
+            {[...Array(product.stock).keys()].map(i => (
+              <option key={i + 1} value={i + 1}>{i + 1}</option>
+            ))}
+          </Form.Select>
 
           <div className="product-detail-buttons">
             <Button variant="primary" size="sm" onClick={handleAddToCart}>
@@ -88,4 +91,4 @@ function ProductDetail() {
   );
 }
 
-export default ProductDetail;
+export default ProductDetail

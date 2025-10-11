@@ -10,6 +10,7 @@ import Contact from './pages/Contact';
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import RecoverPassword from './pages/RecoveryPassword.jsx'
+import News from './pages/News';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Register />} /> 
         <Route path="/recover" element={<RecoverPassword />} /> 
+        <Route path="/news" element={<News />} />
       </Routes>
     </>
   );

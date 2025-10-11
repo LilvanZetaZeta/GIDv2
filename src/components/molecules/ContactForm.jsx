@@ -3,6 +3,7 @@ import Label from '../atoms/Label';
 import Input from '../atoms/Input';
 import TextArea from '../atoms/TextArea';
 import ContactButton from '../atoms/ContactButton';
+import '../../styles/molecules/ContactForm.css';
 
 function ContactForm({ onSubmit }) {
   const [form, setForm] = useState({
@@ -19,10 +20,11 @@ function ContactForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (onSubmit) onSubmit(form);
+    setForm({ name: '', email: '', message: '' }); // limpia campos
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="contact-form">
       <Label htmlFor="name">Nombre</Label>
       <Input
         id="name"

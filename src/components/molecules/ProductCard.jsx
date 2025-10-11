@@ -10,17 +10,20 @@ function ProductCard({ product }) {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
 
-  const handleAddToCart = () => {
-    if (quantity > product.stock) {
-      alert(`Solo hay ${product.stock} unidades disponibles`);
-      return;
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    const success = addToCart({ ...product, quantity });
+    if (success) {
+      alert(`${quantity} unidad(es) de ${product.name} agregadas al carrito`);
     }
-    addToCart({ ...product, quantity });
-    alert(`${quantity} unidad(es) de ${product.name} agregadas al carrito`);
+  };
+
+  const handleCardClick = () => {
+    navigate(`/producto/${product.id}`);
   };
 
   return (
-    <Card className="custom-product-card">
+    <Card className="custom-product-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="custom-image-wrapper">
         <Card.Img src={imagePath} alt={product.name} className="custom-product-image" />
       </div>
@@ -30,20 +33,25 @@ function ProductCard({ product }) {
         <Card.Text className="custom-product-price">${product.price.toLocaleString('es-CL')}</Card.Text>
         <Card.Text className="text-muted">Stock disponible: {product.stock}</Card.Text>
 
-        <Form.Control
-          type="number"
-          min="1"
-          max={product.stock}
+        <Form.Select
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
           className="mb-2"
-        />
+          onClick={(e) => e.stopPropagation()}
+        >
+          {[...Array(product.stock).keys()].map(i => (
+            <option key={i + 1} value={i + 1}>{i + 1}</option>
+          ))}
+        </Form.Select>
 
         <div className="custom-button-group">
           <Button variant="primary" size="sm" className="custom-buy-button" onClick={handleAddToCart}>
             Comprar
           </Button>
-          <Button variant="dark" size="sm" className="custom-watch-button" onClick={() => navigate(`/producto/${product.id}`)}>
+          <Button variant="dark" size="sm" className="custom-watch-button" onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/producto/${product.id}`);
+          }}>
             Ver más
           </Button>
         </div>

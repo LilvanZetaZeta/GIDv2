@@ -6,7 +6,9 @@ function Register() {
   return (
     <Container className="mt-5">
       <h2>Registrarse</h2>
-      <RegisterForm />
+      <div data-testid="register-form">
+        <RegisterForm />
+      </div>
     </Container>
   );
 }
