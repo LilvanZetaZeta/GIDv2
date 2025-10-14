@@ -57,7 +57,7 @@ function Login() {
 
       <div className="d-flex justify-content-between mt-3">
         <Button variant="link" onClick={() => navigate('/recover')}>
-            Olvidé mi contraseña
+          Olvidé mi contraseña
         </Button>
         <Button variant="link" onClick={() => navigate('/register')}>
           Registrarse

@@ -51,7 +51,6 @@ function RecoverPassword() {
           <Form.Group className="mb-3" controlId="recoverEmail">
             <Form.Label>Correo electrónico</Form.Label>
             <Form.Control
-              id="recoverEmail"
               type="email"
               placeholder="Ingresa tu correo"
               value={email}
@@ -70,7 +69,6 @@ function RecoverPassword() {
           <Form.Group className="mb-3" controlId="recoverCode">
             <Form.Label>Código recibido</Form.Label>
             <Form.Control
-              id="recoverCode"
               type="text"
               placeholder="Ingresa el código"
               value={enteredCode}
@@ -81,7 +79,6 @@ function RecoverPassword() {
           <Form.Group className="mb-3" controlId="recoverNewPassword">
             <Form.Label>Nueva contraseña</Form.Label>
             <Form.Control
-              id="recoverNewPassword"
               type="password"
               placeholder="Ingresa nueva contraseña"
               value={newPassword}
