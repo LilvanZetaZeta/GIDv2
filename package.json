@@ -12,12 +12,14 @@
     "test:watch": "karma start"
   },
   "dependencies": {
-    "react": "^19.1.1",
+    "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
+    "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
-    "react-router-dom": "^7.9.3",
-    "react-dom": "^19.2.0"
-   },
+    "react-dom": "^19.2.0",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^7.9.5"
+  },
   "devDependencies": {
     "@babel/core": "^7.28.4",
     "@babel/preset-env": "^7.28.3",
