@@ -1,43 +1,29 @@
 import React from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import { getCart } from '../../data/cart';
-import '../../styles/organisms/Navbar.css';
+import { useAuth } from '../../hooks/useAuth';
+import { CartWidget } from '../molecules/CartWidget';
+import { Link as AtomLink } from '../atoms/Link';
+import '../../styles/components/organisms/Navbar.css';
 
-
-function NavBar() {
-  const cartCount = getCart().length;
-
+export const Navbar = () => {
+  const { user, logout } = useAuth();
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Container>
-        <Navbar.Brand href="/">
-          <span className="material-icons">
-            storefront
-          </span>
-          GID
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="main-navbar-nav" />
-        <Navbar.Collapse id="main-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="/products">Productos</Nav.Link>
-            <Nav.Link href="/contact">Contacto</Nav.Link>
-            <Nav.Link href="/news">Noticias</Nav.Link>
-          </Nav>
-          <Nav>
-            <Nav.Link href="/auth">
-              <span className="material-icons">person</span>
-            </Nav.Link>
-            <Nav.Link href="/cart">
-              <span className="material-icons">shopping_cart</span>
-              {cartCount > 0 && (
-                <span className="badge bg-danger ms-1">{cartCount}</span>
-              )}
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <nav className="navbar">
+      <div className="navbar__container">
+        <AtomLink to="/" className="navbar__logo">GID</AtomLink>
+        <div className="navbar__links">
+          <AtomLink to="/">Productos</AtomLink>
+          <AtomLink to="/news">Noticias</AtomLink>
+          <AtomLink to="/contact">Contacto</AtomLink>
+          <CartWidget />
+          {user ? (
+            <>
+              {user.role === 'ADMIN' && <AtomLink to="/admin">Admin</AtomLink>}
+              <AtomLink to="/profile">{user.firstname}</AtomLink>
+              <button onClick={logout} className="link">Salir</button>
+            </>
+          ) : <AtomLink to="/login">Entrar</AtomLink>}
+        </div>
+      </div>
+    </nav>
   );
-}
-
-export default NavBar;
+};

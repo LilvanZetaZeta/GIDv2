@@ -1,18 +1,14 @@
 import React from 'react';
-import '../../styles/atoms/TextArea.css';
+import '../../styles/components/atoms/Textarea.css';
 
-function TextArea({ id, name, placeholder, value, onChange, rows = 4 }) {
+export const Textarea = ({ placeholder, value, onChange, ...props }) => {
   return (
     <textarea
-      id={id}
-      name={name}
-      className="textarea"
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      rows={rows}
+      className="textarea"
+      {...props}
     />
   );
-}
-
-export default TextArea;
+};

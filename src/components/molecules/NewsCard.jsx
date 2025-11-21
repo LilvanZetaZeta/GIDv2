@@ -1,16 +1,17 @@
 import React from 'react';
-import '../../styles/molecules/NewsCard.css';
+import { Typography } from '../atoms/Typography';
+import '../../styles/components/molecules/NewsCard.css';
 
-function NewsCard({ title, summary, url }) {
+export const NewsCard = ({ title, description, link }) => {
   return (
-    <div className="news-card">
-      <h3>{title}</h3>
-      <p>{summary}</p>
-      <a href={url} target="_blank" rel="noopener noreferrer">
+    <article className="news-card">
+      <Typography variant="h2" className="news-card__title">{title}</Typography>
+      <Typography variant="body" className="news-card__description">
+        {description}
+      </Typography>
+      <a href={link} className="news-card__link" target="_blank" rel="noopener noreferrer">
         Leer más →
-      </a>  
-    </div>
+      </a>
+    </article>
   );
-}
-
-export default NewsCard;
+};

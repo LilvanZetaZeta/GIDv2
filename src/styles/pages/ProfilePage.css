@@ -1,0 +1,11 @@
+.profile-page {
+    display: grid;
+    gap: 2rem;
+  }
+  @media (min-width: 1024px) {
+    /* 1/3 para el perfil, 2/3 para el historial en pantallas grandes */
+    .profile-page {
+      grid-template-columns: 1fr 2fr;
+      align-items: flex-start;
+    }
+  }

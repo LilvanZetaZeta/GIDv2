@@ -1,0 +1,29 @@
+.item-count {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .item-count__selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+  }
+  .item-count__button {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .item-count__button:disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+  }
+  .item-count__quantity {
+    padding: 0.5rem 1rem;
+    font-size: 1.125rem;
+    border-left: 1px solid #d1d5db;
+    border-right: 1px solid #d1d5db;
+  }

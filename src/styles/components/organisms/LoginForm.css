@@ -1,0 +1,6 @@
+/* Esta clase será reutilizada por RegisterForm */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
