@@ -1,0 +1,22 @@
+.cart-view__items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .cart-view__summary {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  .cart-view__total {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .cart-view__checkout-button-wrapper {
+    width: 100%;
+    max-width: 300px;
+  }
