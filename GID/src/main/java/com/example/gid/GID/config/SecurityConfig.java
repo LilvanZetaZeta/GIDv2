@@ -51,10 +51,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // LISTA BLANCA DE ORÍGENES
+        // AQUÍ ESTÁ EL CAMBIO: Agregamos tu URL exacta de Vercel
         configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:5173", // Tu frontend local
-            "https://tu-app.vercel.app" // <--- ¡CAMBIA ESTO POR TU URL REAL DE VERCEL!
+            "http://localhost:5173",             // Para cuando trabajes en tu PC
+            "https://gi-dv2.vercel.app",         // <--- ¡ESTA ES LA QUE FALTABA!
+            "https://gi-dv2.vercel.app/"         // (A veces ayuda ponerla con barra al final por si acaso)
         ));
         
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
