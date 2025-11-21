@@ -7,6 +7,7 @@ import { Button } from '../components/atoms/Button';
 import toast from 'react-hot-toast';
 import '../styles/pages/AdminDashboardPage.css';
 import { getProducts, deleteProduct } from '../services/productApi';
+import { Image } from '../components/atoms/Image';
 
 
 export const AdminDashboardPage = () => {
@@ -187,4 +188,5 @@ export const AdminDashboardPage = () => {
         )}
       </div>
     );
+
   };
