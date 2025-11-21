@@ -1,0 +1,13 @@
+.cart-widget {
+    position: relative;
+    display: block;
+    color: #4b5563;
+    transition: color 0.2s;
+  }
+  .cart-widget:hover {
+    color: #2563eb;
+  }
+  .cart-widget__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }

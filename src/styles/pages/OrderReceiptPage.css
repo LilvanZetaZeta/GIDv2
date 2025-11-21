@@ -1,0 +1,22 @@
+.receipt-page {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  .receipt-page__header {
+    color: #16a34a; /* green-600 */
+    text-align: center;
+  }
+  .receipt-page__details {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .receipt-page__items {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+  }
