@@ -30,24 +30,12 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            
+            // --- PRUEBA DIAGNÓSTICA: Deshabilitar TODA la seguridad ---
+            // Si con esto puedes entrar a Swagger, confirma que el problema está en cómo
+            // estábamos definiendo las rutas en el authorizeHttpRequests.
             .authorizeHttpRequests(auth -> auth
-                // --- ENDPOINTS PÚBLICOS (SIN AUTENTICACIÓN) ---
-                
-                // 1. Permitir acceso a la página principal y a los productos
-                .requestMatchers("/", "/api/v1/products/**").permitAll()
-                
-                // 2. Permitir acceso a los endpoints de registro y login
-                .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
-                
-                // 3. <-- ¡SOLUCIÓN CLAVE! Reglas explícitas para Swagger -->
-                // Permitir la página de la interfaz de usuario
-                .requestMatchers("/doc/swagger-ui/**", "/doc/swagger-ui.html").permitAll()
-                // Permitir el acceso al archivo de configuración de la API
-                .requestMatchers("/doc/v3/api-docs/**").permitAll()
-    
-                // --- ENDPOINTS PRIVADOS (REQUIEREN AUTENTICACIÓN) ---
-                // Cualquier otra petición debe estar autenticada
-                .anyRequest().authenticated()
+                .anyRequest().permitAll() // <-- Permite TODO
             );
     
         return http.build();
