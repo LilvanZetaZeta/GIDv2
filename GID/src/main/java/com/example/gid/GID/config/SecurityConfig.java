@@ -40,7 +40,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .requestMatchers("/api/v1/products/**").permitAll() 
             
             // 3. <-- ¡MÁS EXPLÍCITO! Permitir acceso a toda la documentación de Swagger -->
-            .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            .requestMatchers("/doc/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
             // --- ENDPOINTS PRIVADOS (REQUIEREN AUTENTICACIÓN) ---
             // Cualquier otra petición debe estar autenticada
