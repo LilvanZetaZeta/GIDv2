@@ -26,25 +26,29 @@ public class SecurityConfig {
 
     // 2. El filtro de seguridad principal (AQUÍ ESTÁ LA MAGIA)
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
-                // --- ENDPOINTS PÚBLICOS (SIN AUTENTICACIÓN) ---
-                // Permitir acceso a los endpoints de registro y login
-                .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
-                
-                // Permitir acceso a la documentación de Swagger
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-    
-                // --- ENDPOINTS PRIVADOS (REQUIEREN AUTENTICACIÓN) ---
-                // Cualquier otra petición debe estar autenticada
-                .anyRequest().authenticated()
-            );
-    
-        return http.build();
-    }
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .authorizeHttpRequests(auth -> auth
+            // --- ENDPOINTS PÚBLICOS (SIN AUTENTICACIÓN) ---
+            
+            // 1. Permitir acceso a los endpoints de registro y login
+            .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
+            
+            // 2. <-- ¡IMPORTANTE! Permitir acceso a los productos para que el homepage funcione -->
+            .requestMatchers("/api/v1/products/**").permitAll() 
+            
+            // 3. <-- ¡MÁS EXPLÍCITO! Permitir acceso a toda la documentación de Swagger -->
+            .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+            // --- ENDPOINTS PRIVADOS (REQUIEREN AUTENTICACIÓN) ---
+            // Cualquier otra petición debe estar autenticada
+            .anyRequest().authenticated()
+        );
+
+    return http.build();
+}
 
     // 3. Configuración de CORS Centralizada
     @Bean
