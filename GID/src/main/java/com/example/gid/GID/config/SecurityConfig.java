@@ -32,7 +32,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(auth -> auth
             // --- ENDPOINTS PÚBLICOS (SIN AUTENTICACIÓN) ---
-            .requestMatchers("/").permitAll();
+            .requestMatchers("/").permitAll()
             // 1. Permitir acceso a los endpoints de registro y login
             .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
             
