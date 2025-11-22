@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import com.example.gid.GID.model.User;
 import com.example.gid.GID.model.Order;
@@ -18,7 +19,7 @@ import com.example.gid.GID.service.UserService;
 import com.example.gid.GID.service.OrderService;
 import java.util.List;
 
-
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -55,7 +56,7 @@ public class UserController {
     public ResponseEntity<User> updateUserProfile(@RequestBody User userDetails) {
         return ResponseEntity.ok(userService.updateUser(userService.getAuthenticatedUserProfile().getId(), userDetails));
     }
-
+    
     @GetMapping("/profile/orders")
     public ResponseEntity<List<Order>> getMyOrderHistory() {
         User user = userService.getAuthenticatedUserProfile();
