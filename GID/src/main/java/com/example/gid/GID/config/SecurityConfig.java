@@ -28,21 +28,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // Desactivamos CSRF porque es una API REST, no una web MVC clásica
             .csrf(csrf -> csrf.disable())
-            
-            // Activamos CORS usando la configuración definida más abajo
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            
-            // Definimos qué rutas son públicas
             .authorizeHttpRequests(auth -> auth
-                // Permitir acceso a Swagger para que puedas probar
-                .requestMatchers("/doc/**", "/v3/api-docs/**").permitAll()
-                // Permitir acceso a todo lo demás (útil para desarrollo inicial)
-                .anyRequest().permitAll() 
-                // OJO: En el futuro, cambiarás .anyRequest().permitAll() por .authenticated()
+                // --- ENDPOINTS PÚBLICOS (SIN AUTENTICACIÓN) ---
+                // Permitir acceso a los endpoints de registro y login
+                .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
+                
+                // Permitir acceso a la documentación de Swagger
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+    
+                // --- ENDPOINTS PRIVADOS (REQUIEREN AUTENTICACIÓN) ---
+                // Cualquier otra petición debe estar autenticada
+                .anyRequest().authenticated()
             );
-
+    
         return http.build();
     }
 
