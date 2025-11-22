@@ -31,20 +31,22 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                // --- ENDPOINTS PÚBLICOS ---
-                // Agrupamos todas las rutas públicas aquí
+                // --- ENDPOINTS PÚBLICOS (SIN AUTENTICACIÓN) ---
                 
-                // Página principal y API pública
+                // 1. Permitir acceso a la página principal y a los productos
                 .requestMatchers("/", "/api/v1/products/**").permitAll()
                 
-                // Autenticación de usuarios
+                // 2. Permitir acceso a los endpoints de registro y login
                 .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
                 
-                // <-- ¡SOLUCIÓN SIMPLIFICADA! Un solo comodín para toda la documentación de Swagger -->
-                .requestMatchers("/doc/**").permitAll()
+                // 3. <-- ¡SOLUCIÓN CLAVE! Reglas explícitas para Swagger -->
+                // Permitir la página de la interfaz de usuario
+                .requestMatchers("/doc/swagger-ui/**", "/doc/swagger-ui.html").permitAll()
+                // Permitir el acceso al archivo de configuración de la API
+                .requestMatchers("/doc/v3/api-docs/**").permitAll()
     
-                // --- ENDPOINTS PRIVADOS ---
-                // Cualquier otra petición requiere autenticación
+                // --- ENDPOINTS PRIVADOS (REQUIEREN AUTENTICACIÓN) ---
+                // Cualquier otra petición debe estar autenticada
                 .anyRequest().authenticated()
             );
     
