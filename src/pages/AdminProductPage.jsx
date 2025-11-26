@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { createProduct } from '../services/productApi';
+// CORRECCIÓN: Añadido updateProduct a la importación
+import { createProduct, updateProduct } from '../services/productApi'; 
 import { uploadImage } from '../services/imageUploadApi';
 import { Input } from '../components/atoms/Input';
 import { Button } from '../components/atoms/Button';
 import { Typography } from '../components/atoms/Typography';
 import toast from 'react-hot-toast';
-import '../styles/pages/AdminProductPage.css';
+import '../../styles/components/organisms/LoginForm.css'; // Reutilizamos estilos de form
 
-// Ahora recibe props para manejar edición y cierre
 export const AdminProductPage = ({ productToEdit, onSuccess, onCancel }) => {
-    
     // Estado inicial
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -18,22 +17,21 @@ export const AdminProductPage = ({ productToEdit, onSuccess, onCancel }) => {
     const [category, setCategory] = useState('');
     const [file, setFile] = useState(null);
     
-    // URL de la imagen actual (para cuando editamos y no subimos una nueva)
+    // Guardar URL actual por si no se sube nueva imagen al editar
     const [currentImageUrl, setCurrentImageUrl] = useState('');
-    
     const [loading, setLoading] = useState(false);
 
-    // Efecto: Si nos pasan un producto para editar, rellenamos el formulario
+    // Efecto: Cargar datos si estamos editando
     useEffect(() => {
         if (productToEdit) {
-            setName(productToEdit.name);
-            setDescription(productToEdit.description);
-            setPrice(productToEdit.price);
-            setStock(productToEdit.stock);
-            setCategory(productToEdit.category);
-            setCurrentImageUrl(productToEdit.imageUrl);
+            setName(productToEdit.name || '');
+            setDescription(productToEdit.description || '');
+            setPrice(productToEdit.price || 0);
+            setStock(productToEdit.stock || 0);
+            setCategory(productToEdit.category || '');
+            setCurrentImageUrl(productToEdit.imageUrl || '');
         } else {
-            // Limpiar si es modo crear
+            // Limpiar si es crear
             setName(''); setDescription(''); setPrice(0); setStock(1); setCategory(''); setFile(null); setCurrentImageUrl('');
         }
     }, [productToEdit]);
@@ -42,32 +40,22 @@ export const AdminProductPage = ({ productToEdit, onSuccess, onCancel }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // --- VALIDACIONES CORREGIDAS ---
-        if (price < 0) {
-            return toast.error("El precio no puede ser negativo.");
-        }
-        if (stock < 1) {
-            return toast.error("El stock debe ser al menos 1.");
-        }
-        
-        // Si es crear (no hay productToEdit), la imagen es obligatoria.
-        // Si es editar, es opcional (podemos mantener la vieja).
-        if (!productToEdit && !file) {
-            return toast.error("Por favor, selecciona una imagen.");
-        }
-        // -------------------------------
+
+        // Validaciones
+        if (price < 0) return toast.error("El precio no puede ser negativo.");
+        if (stock < 0) return toast.error("El stock no puede ser negativo."); // Stock puede ser 0 si está agotado
+        if (!productToEdit && !file) return toast.error("Por favor, selecciona una imagen.");
 
         setLoading(true);
-        
+        const toastId = toast.loading(productToEdit ? 'Actualizando...' : 'Creando...');
+
         try {
             let finalImageUrl = currentImageUrl;
 
-            // 1. Si el usuario seleccionó un archivo nuevo, lo subimos
+            // 1. Subir imagen solo si el usuario seleccionó una nueva
             if (file) {
-                const toastId = toast.loading('Subiendo imagen nueva...');
+                toast.loading('Subiendo imagen...', { id: toastId });
                 finalImageUrl = await uploadImage(file);
-                toast.dismiss(toastId);
             }
 
             const productData = { 
@@ -80,25 +68,25 @@ export const AdminProductPage = ({ productToEdit, onSuccess, onCancel }) => {
             };
             
             if (productToEdit) {
-                // MODO EDICIÓN
-                toast.loading('Guardando cambios...');
+                // --- MODO EDICIÓN ---
                 await updateProduct(productToEdit.id, productData);
-                toast.dismiss();
-                toast.success("¡Producto actualizado con éxito!");
+                toast.success("¡Producto actualizado!", { id: toastId });
             } else {
-                // MODO CREACIÓN
-                toast.loading('Creando producto...');
+                // --- MODO CREACIÓN ---
                 await createProduct(productData);
-                toast.dismiss();
-                toast.success("¡Producto creado con éxito!");
+                toast.success("¡Producto creado!", { id: toastId });
             }
             
-            // Avisamos al padre que terminamos para que recargue la tabla
+            // Limpiar y avisar al padre
+            if (!productToEdit) {
+                setName(''); setDescription(''); setPrice(0); setStock(1); setCategory(''); setFile(null);
+                e.target.reset(); 
+            }
             if (onSuccess) onSuccess();
 
         } catch (error) {
             console.error("Error:", error);
-            toast.error("Hubo un error al guardar.");
+            toast.error("Hubo un error al guardar.", { id: toastId });
         } finally {
             setLoading(false);
         }
@@ -109,40 +97,27 @@ export const AdminProductPage = ({ productToEdit, onSuccess, onCancel }) => {
             <Typography variant="h2" className="text-center">
                 {productToEdit ? `Editar Producto #${productToEdit.id}` : 'Nuevo Producto'}
             </Typography>
-            
-            <form onSubmit={handleSubmit} className="admin-page__form">
+
+            <form onSubmit={handleSubmit} className="form">
+                <label style={{fontSize: '0.9rem', fontWeight: 'bold'}}>Nombre</label>
                 <Input placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} required />
+                
+                <label style={{fontSize: '0.9rem', fontWeight: 'bold'}}>Descripción</label>
                 <Input placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
                 
-                <label>Precio:</label>
-                <Input 
-                    type="number" 
-                    min="0" 
-                    step="0.01" 
-                    placeholder="Precio" 
-                    value={price} 
-                    onChange={(e) => setPrice(e.target.value)} 
-                    required 
-                />
+                <label style={{fontSize: '0.9rem', fontWeight: 'bold'}}>Precio</label>
+                <Input type="number" step="0.01" placeholder="Precio" value={price} onChange={(e) => setPrice(e.target.value)} required />
                 
-                <label>Stock:</label>
-                <Input 
-                    type="number" 
-                    min="1" 
-                    placeholder="Stock" 
-                    value={stock} 
-                    onChange={(e) => setStock(e.target.value)} 
-                    required 
-                />
+                <label style={{fontSize: '0.9rem', fontWeight: 'bold'}}>Stock</label>
+                <Input type="number" placeholder="Stock" value={stock} onChange={(e) => setStock(e.target.value)} required />
                 
+                <label style={{fontSize: '0.9rem', fontWeight: 'bold'}}>Categoría</label>
                 <Input placeholder="Categoría" value={category} onChange={(e) => setCategory(e.target.value)} required />
                 
                 <div style={{margin: '1rem 0'}}>
-                    <label style={{display:'block', marginBottom:'.5rem'}}>Imagen:</label>
+                    <label style={{fontSize: '0.9rem', fontWeight: 'bold', display:'block', marginBottom:'5px'}}>Imagen</label>
                     {currentImageUrl && !file && (
-                        <div style={{marginBottom: '10px', fontSize: '0.9rem', color: 'green'}}>
-                            Imagen actual cargada. Sube otra solo si quieres cambiarla.
-                        </div>
+                        <p style={{fontSize: '0.8rem', color: 'green', marginBottom: '5px'}}>Imagen actual cargada. Sube otra para cambiarla.</p>
                     )}
                     <Input type="file" onChange={handleFileChange} required={!productToEdit} />
                 </div>
@@ -151,7 +126,8 @@ export const AdminProductPage = ({ productToEdit, onSuccess, onCancel }) => {
                     <Button type="submit" disabled={loading}>
                         {loading ? "Guardando..." : (productToEdit ? "Guardar Cambios" : "Crear Producto")}
                     </Button>
-                    {onCancel && (
+                    
+                    {productToEdit && onCancel && (
                         <Button type="button" variant="secondary" onClick={onCancel} disabled={loading}>
                             Cancelar
                         </Button>
