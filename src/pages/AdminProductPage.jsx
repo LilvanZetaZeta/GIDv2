@@ -6,7 +6,7 @@ import { Input } from '../components/atoms/Input';
 import { Button } from '../components/atoms/Button';
 import { Typography } from '../components/atoms/Typography';
 import toast from 'react-hot-toast';
-import '../../styles/components/organisms/LoginForm.css'; // Reutilizamos estilos de form
+import '../styles/components/organisms/LoginForm.css'; // Reutilizamos estilos de form
 
 export const AdminProductPage = ({ productToEdit, onSuccess, onCancel }) => {
     // Estado inicial
