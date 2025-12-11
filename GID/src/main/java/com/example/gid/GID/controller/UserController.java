@@ -1,6 +1,7 @@
 package com.example.gid.GID.controller;
 
 import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import com.example.gid.GID.model.User;
 import com.example.gid.GID.model.Order;
 import com.example.gid.GID.service.UserService;
 import com.example.gid.GID.service.OrderService;
-import java.util.List;
+import com.example.gid.GID.config.JwtUtil; // <--- 1. IMPORTAR ESTO
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
@@ -26,8 +27,9 @@ public class UserController {
 
     @Autowired private UserService userService;
     @Autowired private OrderService orderService;
-
     
+    @Autowired private JwtUtil jwtUtil; // <--- 2. INYECTAR LA UTILIDAD JWT
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
@@ -39,9 +41,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> creds) {
-        try {
+
             User user = userService.login(creds.get("email"), creds.get("password"));
-            return ResponseEntity.ok(Map.of("token", "dummy-token", "user", user));
+            
+            String token = jwtUtil.generateToken(user.getEmail());
+            return ResponseEntity.ok(Map.of("token", token, "user", user));
+            
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
