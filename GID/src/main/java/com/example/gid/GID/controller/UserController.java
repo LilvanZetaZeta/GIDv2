@@ -18,18 +18,23 @@ import com.example.gid.GID.model.User;
 import com.example.gid.GID.model.Order;
 import com.example.gid.GID.service.UserService;
 import com.example.gid.GID.service.OrderService;
-import com.example.gid.GID.config.JwtUtil; // <--- 1. IMPORTAR ESTO
+import com.example.gid.GID.config.JwtUtil;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    @Autowired private UserService userService;
-    @Autowired private OrderService orderService;
+    @Autowired
+    private UserService userService;
     
-    @Autowired private JwtUtil jwtUtil; // <--- 2. INYECTAR LA UTILIDAD JWT
+    @Autowired
+    private OrderService orderService;
+    
+    @Autowired
+    private JwtUtil jwtUtil;
 
+    // --- REGISTER ---
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
@@ -39,12 +44,17 @@ public class UserController {
         }
     }
 
+    // --- LOGIN ---
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> creds) {
-
+        try {
+            // 1. Validar credenciales
             User user = userService.login(creds.get("email"), creds.get("password"));
             
+            // 2. Generar Token JWT Real
             String token = jwtUtil.generateToken(user.getEmail());
+
+            // 3. Devolver respuesta
             return ResponseEntity.ok(Map.of("token", token, "user", user));
             
         } catch (RuntimeException e) {
@@ -52,6 +62,7 @@ public class UserController {
         }
     }
 
+    // --- PERFIL ---
     @GetMapping("/profile")
     public ResponseEntity<User> getUserProfile() {
         return ResponseEntity.ok(userService.getAuthenticatedUserProfile());
@@ -68,7 +79,7 @@ public class UserController {
         return ResponseEntity.ok(orderService.getUserOrderHistory(user.getId()));
     }
 
-    // --- NUEVOS ENDPOINTS ADMIN (Usuarios) ---
+    // --- ADMIN ---
     
     @GetMapping("/admin/all")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -84,4 +95,4 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
-}
+} 
